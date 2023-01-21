@@ -25,6 +25,7 @@ export class PipelineStack extends Stack {
         }),
         commands: [
           'cd codepipeline-with-fargate/infra',
+          'npm install',
           'npx cdk synth',
         ]
       })
