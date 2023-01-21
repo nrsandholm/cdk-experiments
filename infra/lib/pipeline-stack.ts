@@ -20,7 +20,7 @@ export class PipelineStack extends Stack {
     const pipeline = new CodePipeline(this, 'Pipeline', {
       pipelineName: 'FargatePipeline',
       synth: new ShellStep('Synth', {
-        input: CodePipelineSource.gitHub('nrsandholm/cdk-experiments', 'main', {
+        input: CodePipelineSource.gitHub('nrsandholm/codepipeline-with-fargate', 'main', {
           authentication: SecretValue.secretsManager(this.node.tryGetContext('repo-auth-token-name'))
         }),
         commands: [
