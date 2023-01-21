@@ -7,7 +7,9 @@ class PipelineAppStage extends Stage {
   constructor(scope: Construct, id: string, props?: StageProps) {
     super(scope, id, props);
 
-    const appStack = new AppStack(this, 'AppStack', {});
+    const appStack = new AppStack(this, 'AppStack', {
+      stageId: id
+    });
   }
 }
 

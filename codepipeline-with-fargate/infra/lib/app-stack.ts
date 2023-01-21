@@ -1,5 +1,4 @@
-import * as cdk from 'aws-cdk-lib';
-import { CfnOutput } from 'aws-cdk-lib';
+import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
 import { Vpc } from 'aws-cdk-lib/aws-ec2';
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
 import { Cluster, ContainerImage, FargateService, FargateTaskDefinition } from 'aws-cdk-lib/aws-ecs';
@@ -7,13 +6,22 @@ import { ApplicationLoadBalancer, ApplicationProtocol } from 'aws-cdk-lib/aws-el
 import { Construct } from 'constructs';
 import path = require('path');
 
-export class AppStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+export interface AppStackProps extends StackProps {
+  stageId: string
+}
+
+export class AppStack extends Stack {
+  constructor(scope: Construct, id: string, props: AppStackProps) {
     super(scope, id, props);
 
-    const vpc = new Vpc(this, 'Vpc');
+    const { stageId } = props;
+
+    const vpc = new Vpc(this, 'Vpc', {
+      vpcName: `${stageId}Vpc`
+    });
 
     const cluster = new Cluster(this, 'Cluster', {
+      clusterName: `${stageId}Cluster`,
       vpc,
     });
 
@@ -35,11 +43,13 @@ export class AppStack extends cdk.Stack {
     })
 
     const service = new FargateService(this, 'Service', {
+      serviceName: `${stageId}Service`,
       taskDefinition,
       cluster,
     });
 
     const loadBalancer = new ApplicationLoadBalancer(this, 'LoadBalancer', {
+      loadBalancerName: `${stageId}LoadBalancer`,
       vpc,
       internetFacing: true,
     });
@@ -51,6 +61,7 @@ export class AppStack extends cdk.Stack {
     });
 
     listener.addTargets('Target', {
+      targetGroupName: `${stageId}TargetGroup`,
       port: 3000,
       protocol: ApplicationProtocol.HTTP,
       targets: [
