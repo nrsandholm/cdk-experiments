@@ -24,12 +24,12 @@ export class PipelineStack extends Stack {
           authentication: SecretValue.secretsManager(this.node.tryGetContext('repo-auth-token-name'))
         }),
         commands: [
-          'cd codepipeline-with-fargate/infra',
+          'cd infra',
           'npm install',
           'npm run cdk synth',
         ],
         // Define this if you're not working at the root of the repo
-        primaryOutputDirectory: 'codepipeline-with-fargate/infra/cdk.out',
+        primaryOutputDirectory: 'infra/cdk.out',
       })
     });
 
