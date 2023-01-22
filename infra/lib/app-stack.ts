@@ -17,7 +17,8 @@ export class AppStack extends Stack {
     const { stageId } = props;
 
     const vpc = new Vpc(this, 'Vpc', {
-      vpcName: `${stageId}Vpc`
+      vpcName: `${stageId}Vpc`,
+      maxAzs: 1,
     });
 
     const cluster = new Cluster(this, 'Cluster', {
